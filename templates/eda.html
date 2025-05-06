@@ -1,0 +1,301 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AML Detection Dashboard</title>
+    <link rel="icon" type="image/svg+xml" href="/vite.svg">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles */
+    </style>
+</head>
+
+<body>
+    <div id="root">
+        <div class="min-h-screen bg-slate-50">
+            <!-- Header -->
+            <header class="bg-white border-b border-slate-200">
+                <div class="max-w-[1600px] mx-auto px-4">
+                    <div class="flex items-center justify-between h-16">
+                        <h1 class="text-xl font-bold text-blue-600">AML Detective</h1>
+                        <nav class="flex space-x-4">
+                            <a class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors bg-blue-50 text-blue-700" href="/tutorial">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open mr-2">
+                                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                                </svg>
+                                Tutorial
+                            </a>
+                            <a class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors text-slate-600 hover:text-slate-900 hover:bg-slate-50" href="/">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-code mr-2">
+                                    <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path>
+                                    <path d="M14 2v4a2 2 0 0 0 2 2h4"></path>
+                                    <path d="m10 13-2 2 2 2"></path>
+                                    <path d="m14 17 2-2-2-2"></path>
+                                </svg>
+                                Build Rule
+                            </a>
+                            <a class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors text-slate-600 hover:text-slate-900 hover:bg-slate-50" href="/library">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-library mr-2">
+                                    <path d="m16 6 4 14"></path>
+                                    <path d="M12 6v14"></path>
+                                    <path d="M8 8v12"></path>
+                                    <path d="M4 4v16"></path>
+                                </svg>
+                                Label Function Library
+                            </a>
+                        </nav>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <main class="p-6">
+                <div class="max-w-[1600px] mx-auto space-y-6">
+                    <!-- Video + Getting Started -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                        <!-- Video -->
+                        <div class="lg:col-span-2 bg-white rounded-lg shadow-md overflow-hidden p-4">
+                            <iframe
+                            id="tutorial-video"
+                            width="100%"
+                            height="auto"
+                            class="aspect-video rounded"
+                            src="https://www.youtube.com/embed/os_iqsV-jkM?enablejsapi=1"
+                            title="Tutorial for user testing - group 1"
+                            frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            referrerpolicy="strict-origin-when-cross-origin"
+                            allowfullscreen>
+                          </iframe>
+                          
+                        </div>
+                    
+                        <!-- Getting Started Links -->
+                        <div class="p-4 bg-blue-50 border border-blue-100 rounded-lg">
+                        <h3 class="text-xl font-semibold text-blue-800 mb-4">🎥 Getting Started</h3>
+                        <p class="text-slate-600 mb-4">Watch the video guide to understand how to use AML Detective:</p>
+                        <ul class="list-disc list-inside text-blue-700 space-y-2">
+                            <li><a href="#" class="hover:underline jump-time" data-time="0">Create a rule (0:00)</a></li>
+                            <li><a href="#" class="hover:underline jump-time" data-time="24">Sensitivity analysis (0:24)</a></li>
+                            <li><a href="#" class="hover:underline jump-time" data-time="43">Money laundering patterns (0:43)</a></li>
+                            <li><a href="#" class="hover:underline jump-time" data-time="70">Evaluation metrics (1:10)</a></li>
+                          </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Dataset Distribution + Dataset Overview -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Dataset Distribution -->
+                        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                        <div class="p-4 space-y-4">
+                            <div class="flex items-center space-x-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bar-chart3 text-blue-600">
+                                <path d="M3 3v18h18"></path>
+                                <path d="M18 17V9"></path>
+                                <path d="M13 17V5"></path>
+                                <path d="M8 17v-3"></path>
+                            </svg>
+                            <h2 class="text-xl font-semibold text-slate-800">Dataset Distribution</h2>
+                            </div>
+                            <div class="p-4 bg-slate-50 rounded-lg">
+                            <div class="mb-4">
+                                <div class="flex justify-between text-sm mb-1">
+                                <span class="text-slate-600">Legitimate Transactions</span>
+                                <span class="text-slate-700">66%</span>
+                                </div>
+                                <div class="w-full h-2 bg-slate-200 rounded-full">
+                                <div class="h-2 bg-green-500 rounded-full" style="width: 66%;"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-sm mb-1">
+                                <span class="text-slate-600">Money Laundering</span>
+                                <span class="text-slate-700">33%</span>
+                                </div>
+                                <div class="w-full h-2 bg-slate-200 rounded-full">
+                                <div class="h-2 bg-red-500 rounded-full" style="width: 33%;"></div>
+                                </div>
+                            </div>
+                            <p class="mt-4 text-sm text-slate-600">
+                                For every 3 transactions in our dataset:
+                                <ul class="list-disc list-inside mt-2 space-y-1">
+                                <li>2 are legitimate business transactions</li>
+                                <li>1 is identified as money laundering</li>
+                                </ul>
+                                This 2:1 ratio helps our system learn the difference between normal and suspicious patterns.
+                            </p>
+                            </div>
+                        </div>
+                        </div>
+                    
+                        <!-- Dataset Overview -->
+                        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                        <div class="p-4 space-y-4">
+                            <div class="flex items-center space-x-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-target text-blue-600">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <circle cx="12" cy="12" r="6"></circle>
+                                <circle cx="12" cy="12" r="2"></circle>
+                            </svg>
+                            <h2 class="text-xl font-semibold text-slate-800">Dataset Overview</h2>
+                            </div>
+                            <p class="text-slate-600">The dataset consists of financial transactions with the following columns:</p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="space-y-2">
+                                <h3 class="font-medium text-slate-700">Transaction Details</h3>
+                                <ul class="space-y-1 text-sm text-slate-600">
+                                <li><strong>Timestamp:</strong> Date and time of the transaction</li>
+                                <li><strong>From Bank:</strong> Bank initiating the payment</li>
+                                <li><strong>Account:</strong> Sender's account ID</li>
+                                <li><strong>To Bank:</strong> Bank receiving the payment</li>
+                                <li><strong>Account.1:</strong> Receiver's account ID</li>
+                                <li><strong>Amount Paid:</strong> Transaction amount sent</li>
+                                <li><strong>Amount Received:</strong> Transaction amount received</li>
+                                <li><strong>Payment Format:</strong> Method of payment</li>
+                                <li><strong>Is Laundering:</strong> Label indicating if it's laundering</li>
+                                </ul>
+                            </div>
+                            <div class="space-y-2">
+                                <h3 class="font-medium text-slate-700">Currency Information</h3>
+                                <ul class="space-y-1 text-sm text-slate-600">
+                                <li><strong>Payment Currency:</strong> Currency used to send payment</li>
+                                <li><strong>Receiving Currency:</strong> Currency received</li>
+                                </ul>
+                            </div>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                    
+
+                    <!-- Additional Sections -->
+
+                  
+                    <div class="p-4 bg-green-50 border border-green-100 rounded-lg">
+                      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                          <h3 class="text-xl font-semibold text-green-800 mb-4">📝 Task 1: Create Simple Rules</h3>
+                          <p class="text-slate-600 mb-4">Create <strong>5 label functions</strong> manually using the <em>"If...Then..."</em> rule builder. Define simple conditions to flag suspicious transactions based on transaction details.</p>
+                          <a href="/">
+                            <button class="inline-flex items-center justify-center rounded font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 bg-blue-700 hover:bg-blue-800 text-white focus:ring-blue-500 px-4 py-2 text-base mb-4">
+                              Start →
+                            </button>
+                          </a>
+                        </div>
+                        <div class="bg-white rounded border border-green-200 p-4">
+                          <img src="/static/images/task 1.png" alt="Rule creation interface" class="w-full rounded">
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div class="p-4 bg-purple-50 border border-purple-100 rounded-lg">
+                      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                          <h3 class="text-xl font-semibold text-purple-800 mb-4">🔧 Task 2: Use Structuring Typologies</h3>
+                          <p class="text-slate-600 mb-4">Create <strong>2 rules</strong> using <em>structuring typology fields</em> such as <strong>Fan-In</strong> or <strong>Fan-Out</strong>. These patterns help identify layered money movement across accounts.</p>
+                        </div>
+                        <div class="bg-white rounded border border-purple-200 p-4">
+                          <img src="/static/images/task%202.png" alt="Pattern detection examples" class="w-full md:w-1/2 rounded">
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div class="p-4 bg-pink-50 border border-pink-100 rounded-lg">
+                      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                          <h3 class="text-xl font-semibold text-pink-800 mb-4">📊 Task 3: Use Feature Importance</h3>
+                          <p class="text-slate-600 mb-4">Review the <strong>Feature Importance + Comparison</strong> graph to understand which features are most predictive. Based on your observations, write <strong>3 new label functions</strong> manually.</p>
+                        </div>
+                        <div class="bg-white rounded border border-pink-200 p-4">
+                          <img src="/static/images/task 3.png" alt="Feature comparison and rule generation" class="w-full rounded">
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div class="p-4 bg-orange-50 border border-orange-100 rounded-lg">
+                      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                          <h3 class="text-xl font-semibold text-orange-800 mb-4">📈 Task 4: Evaluate and Refine</h3>
+                          <p class="text-slate-600 mb-4">Check the <strong>evaluation metrics</strong> for your existing rules. If a rule isn’t performing well, you can <strong>edit</strong> or <strong>delete</strong> it to improve your overall accuracy.</p>
+                        </div>
+                        <div class="bg-white rounded border border-orange-200 p-4">
+                          <img src="/static/images/task 4.png" alt="Rule performance review" class="w-full rounded">
+                        </div>
+                      </div>
+                    </div>
+                    
+                  <!-- Performance Metrics Section -->
+                  <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                      <div class="p-4">
+                          <div class="space-y-4">
+                              <div class="flex items-center space-x-3">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-gauge text-blue-600">
+                                      <path d="m12 14 4-4"></path>
+                                      <path d="M3.34 19a10 10 0 1 1 17.32 0"></path>
+                                  </svg>
+                                  <h2 class="text-xl font-semibold text-slate-800">Understanding Performance</h2>
+                              </div>
+                              <p class="text-slate-600">When you create rules, you'll see these performance indicators:</p>
+                              <ul class="space-y-2 text-sm text-slate-600">
+                                  <li class="flex items-start">
+                                      <span class="inline-block w-3 h-3 bg-green-500 rounded-full mt-1 mr-2"></span>
+                                      <span><strong>Precision:</strong> How accurate your rule is when it flags suspicious transactions</span>
+                                  </li>
+                                  <li class="flex items-start">
+                                      <span class="inline-block w-3 h-3 bg-blue-500 rounded-full mt-1 mr-2"></span>
+                                      <span><strong>Recall:</strong> How many actual suspicious transactions your rule catches</span>
+                                  </li>
+                                  <li class="flex items-start">
+                                      <span class="inline-block w-3 h-3 bg-purple-500 rounded-full mt-1 mr-2"></span>
+                                      <span><strong>F1 Score:</strong> Overall effectiveness (balance of precision and recall)</span>
+                                  </li>
+                                  <li class="flex items-start">
+                                      <span class="inline-block w-3 h-3 bg-red-500 rounded-full mt-1 mr-2"></span>
+                                      <span><strong>Conflict Rate:</strong> How often rules disagree with each other</span>
+                                  </li>
+                              </ul>
+                          </div>
+                      </div>
+                  </div>
+
+                  
+                  </div>
+                  </div>
+                  </div>
+                  </div>
+                  
+
+                </div>
+            </main>
+        </div>
+    </div>
+</body>
+<script>
+    // Load YouTube API
+    var tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+  
+    var player;
+    function onYouTubeIframeAPIReady() {
+      player = new YT.Player('tutorial-video');
+    }
+  
+    document.addEventListener('DOMContentLoaded', function () {
+      document.querySelectorAll('.jump-time').forEach(link => {
+        link.addEventListener('click', function (e) {
+          e.preventDefault();
+          const seconds = parseInt(this.getAttribute('data-time'), 10);
+          if (player && typeof player.seekTo === 'function') {
+            player.seekTo(seconds, true);
+          }
+        });
+      });
+    });
+  </script>
+  
+  
+</html>
