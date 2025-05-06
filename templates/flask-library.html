@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>📚 Label Function Library</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+            <!-- Header -->
+            <header class="bg-white border-b border-slate-200">
+              <div class="max-w-[1600px] mx-auto px-4">
+                  <div class="flex items-center justify-between h-16">
+                      <h1 class="text-xl font-bold text-blue-600">AML Detective</h1>
+                      <nav class="flex space-x-4">
+                          <a class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors text-slate-600 hover:text-slate-900 hover:bg-slate-50" href="/tutorial">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open mr-2">
+                                  <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                                  <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                              </svg>
+                              Tutorial
+                          </a>
+                          <a class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors text-slate-600 hover:text-slate-900 hover:bg-slate-50" href="/">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-code mr-2">
+                                  <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path>
+                                  <path d="M14 2v4a2 2 0 0 0 2 2h4"></path>
+                                  <path d="m10 13-2 2 2 2"></path>
+                                  <path d="m14 17 2-2-2-2"></path>
+                              </svg>
+                              Build Rule
+                          </a>
+                          <a class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors bg-blue-50 text-blue-700" href="/library">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-library mr-2">
+                                  <path d="m16 6 4 14"></path>
+                                  <path d="M12 6v14"></path>
+                                  <path d="M8 8v12"></path>
+                                  <path d="M4 4v16"></path>
+                              </svg>
+                              Label Function Library
+                          </a>
+                      </nav>
+                  </div>
+              </div>
+          </header>
+
+  <main class="max-w-[1400px] mx-auto px-6 py-8 space-y-6">
+    <div class="flex flex-wrap gap-4">
+      <a href="/" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-sm">Create New Rule</a>
+    </div>
+
+    {% if snorkel_metrics %}
+    <div id="snorkel-metrics" class="bg-white shadow rounded-lg p-6">
+      <h2 class="text-lg font-semibold mb-4">🧠 Weak Supervision Metrics (Snorkel)</h2>
+      <ul class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 text-sm text-slate-700">
+        <li class="group relative">
+          <strong>Accuracy:</strong> 
+          <span id="metric-accuracy">{{ snorkel_metrics.accuracy }}</span>
+          <span class="absolute left-1/2 transform -translate-x-1/2 bottom-100% mb-2 hidden group-hover:block bg-gray-500 text-white text-xs px-2 py-1 rounded-md w-max">
+            Measures the proportion of correctly classified instances out of all instances. It's a basic metric to assess model performance.
+          </span>
+        </li>
+        <li class="group relative">
+          <strong>Precision:</strong> 
+          <span id="metric-precision">{{ snorkel_metrics.precision }}</span>
+          <span class="absolute left-1/2 transform -translate-x-1/2 bottom-100% mb-2 hidden group-hover:block bg-gray-500 text-white text-xs px-2 py-1 rounded-md w-max">
+            Indicates how many of the predicted positive instances are actually positive. It’s important when false positives are costly.
+          </span>
+        </li>
+        <li class="group relative">
+          <strong>Recall:</strong> 
+          <span id="metric-recall">{{ snorkel_metrics.recall }}</span>
+          <span class="absolute left-1/2 transform -translate-x-1/2 bottom-100% mb-2 hidden group-hover:block bg-gray-500 text-white text-xs px-2 py-1 rounded-md w-max">
+            Measures how many actual positive instances were correctly identified by the model. It's important when false negatives are costly.
+          </span>
+        </li>
+        <li class="group relative">
+          <strong>F1 Score:</strong> 
+          <span id="metric-f1">{{ snorkel_metrics.f1_score }}</span>
+          <span class="absolute left-1/2 transform -translate-x-1/2 bottom-100% mb-2 hidden group-hover:block bg-gray-500 text-white text-xs px-2 py-1 rounded-md w-max">
+            The harmonic mean of precision and recall. It balances the two metrics, giving a more balanced view of model performance when classes are imbalanced.
+          </span>
+        </li>
+        <li class="group relative">
+          <strong>Coverage:</strong> 
+          <span id="metric-coverage">{{ snorkel_metrics.coverage }}</span>
+          <span class="absolute left-1/2 transform -translate-x-1/2 bottom-100% mb-2 hidden group-hover:block bg-gray-500 text-white text-xs px-2 py-1 rounded-md w-max">
+            Represents the fraction of labels assigned by the weak supervision model compared to the total number of labels. Higher coverage means more data is labeled.
+          </span>
+        </li>
+        <li class="group relative">
+          <strong>Conflict Rate:</strong> 
+          <span>{{ (conflict_rate * 100) | round(2) }}%</span>
+          <span class="absolute left-1/2 transform -translate-x-1/2 bottom-100% mb-2 hidden group-hover:block bg-gray-500 text-white text-xs px-2 py-1 rounded-md w-max">
+            Measures the percentage of rows flagged by multiple label functions. A conflict means there is disagreement among the label functions on a particular row.
+          </span>
+        </li>
+      </ul>
+    </div>
+{% endif %}
+
+
+
+    <!-- Label Function Table -->
+    <div class="overflow-x-auto bg-white rounded-lg shadow">
+      <table class="min-w-full text-sm divide-y divide-gray-200">
+        <thead class="bg-gray-50 text-left text-xs uppercase tracking-wide text-gray-500">
+          <tr>
+            <th class="p-3">Date</th>
+            <th class="p-3">Creator</th>
+            <th class="p-3">Name</th>
+            <th class="p-3">Typology</th>
+            <th class="p-3">Function Code</th>
+            <th class="p-3">Explanation</th>
+            <th class="p-3">Metrics</th>
+            <th class="p-3">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+          {% for lf in labels %}
+          <tr>
+            <td class="p-3 whitespace-nowrap">{{ lf.date_created }}</td>
+            <td class="p-3">{{ lf.creator }}</td>
+            <td class="p-3">{{ lf.name }}</td>
+            <td class="p-3">
+              {{ lf.name }}
+              {% if lf.source == "typology" %}
+                <span class="ml-1 text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded">Typology</span>
+              {% elif lf.source == "ai" %}
+                <span class="ml-1 text-xs bg-gray-200 text-gray-700 px-2 py-0.5 rounded">AI</span>
+              {% endif %}
+            </td>
+            <td class="p-3 font-mono text-xs bg-slate-50 rounded whitespace-pre-wrap break-words max-w-[400px]">{{ lf.code }}</td>
+            <td class="p-3 text-slate-700">{{ lf.explanation or '—' }}</td>
+            <td class="p-3 space-y-1 text-slate-700 text-xs">
+              <div>Accuracy: {{ lf.accuracy or '—' }}</div>
+              <div>Precision: {{ lf.precision or '—' }}</div>
+              <div>Recall: {{ lf.recall or '—' }}</div>
+              <div>F1: {{ lf.f1_score or '—' }}</div>
+              <div>Coverage: {{ lf.coverage_rate }}</div>
+              <div>Matched: {{ lf.matched_indices | length }}</div>
+              {% if lf.metric_chart %}
+              <img src="data:image/png;base64,{{ lf.metric_chart }}" class="mt-2 rounded shadow max-w-[250px]" />
+              {% endif %}
+            </td>
+            <td class="p-3 text-sm whitespace-nowrap space-y-1">
+              <form method="POST" action="/delete-label/{{ loop.index0 }}">
+                <button class="bg-red-100 text-red-600 px-3 py-1 rounded hover:bg-red-200 w-full">🗑️ Delete</button>
+              </form>
+              <a href="/edit-label/{{ loop.index0 }}" class="inline-block w-full text-center bg-gray-100 text-gray-800 px-3 py-1 rounded hover:bg-gray-200">✏️ Edit</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </main>
+</body>
+
+<script>
+
+async function triggerLabelModelTraining() {
+  try {
+    const res = await fetch("/train-labelmodel", {
+      headers: { "X-Requested-With": "XMLHttpRequest" }
+    });
+
+    if (!res.ok) {
+      console.warn("⚠️ Skipping Snorkel training:", await res.text());
+      return;
+    }
+
+    const data = await res.json();
+
+    const metrics = data.metrics || {};
+    const metricMap = {
+      "accuracy": "metric-accuracy",
+      "precision": "metric-precision",
+      "recall": "metric-recall",
+      "f1_score": "metric-f1",
+      "coverage": "metric-coverage"
+    };
+
+    for (const [key, value] of Object.entries(metrics)) {
+      const el = document.getElementById(metricMap[key]);
+      if (el) el.textContent = value;
+    }
+
+    if (data.conflict_rate !== undefined) {
+      const conflictEl = document.getElementById("conflict-rate");
+      if (conflictEl) {
+        conflictEl.innerHTML = `<strong>Conflict Rate:</strong> ${(data.conflict_rate * 100).toFixed(2)}%`;
+      }
+    }
+
+  } catch (e) {
+    console.error("❌ Error in auto-training:", e);
+  }
+}
+
+window.addEventListener("DOMContentLoaded", triggerLabelModelTraining);
+
+  </script>  
+</html>
