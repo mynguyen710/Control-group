@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AML Rule Builder</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-slate-50 text-slate-900">
+            <!-- Header -->
+            <header class="bg-white border-b border-slate-200">
+              <div class="max-w-[1600px] mx-auto px-4">
+                  <div class="flex items-center justify-between h-16">
+                      <h1 class="text-xl font-bold text-blue-600">AML Detective</h1>
+                      <nav class="flex space-x-4">
+                          <a class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors text-slate-600 hover:text-slate-900 hover:bg-slate-50" href="/tutorial">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open mr-2">
+                                  <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                                  <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                              </svg>
+                              Tutorial
+                          </a>
+                          <a class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors bg-blue-50 text-blue-700" href="/">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-code mr-2">
+                                  <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path>
+                                  <path d="M14 2v4a2 2 0 0 0 2 2h4"></path>
+                                  <path d="m10 13-2 2 2 2"></path>
+                                  <path d="m14 17 2-2-2-2"></path>
+                              </svg>
+                              Build Rule
+                          </a>
+                          <a class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors text-slate-600 hover:text-slate-900 hover:bg-slate-50" href="/library">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-library mr-2">
+                                  <path d="m16 6 4 14"></path>
+                                  <path d="M12 6v14"></path>
+                                  <path d="M8 8v12"></path>
+                                  <path d="M4 4v16"></path>
+                              </svg>
+                              Label Function Library
+                          </a>
+                      </nav>
+                  </div>
+              </div>
+          </header>
+
+ <main class="max-w-[1200px] mx-auto p-6">
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-6"><div class="lg:col-span-8 space-y-6">
+    <!-- LEFT COLUMN: Rule Builder + Preview + Metrics -->
+      <div class="lg:col-span-8 space-y-6">
+        
+        <!-- Manual Rule Builder -->
+        <div class="bg-white p-6 rounded-xl shadow">
+          <h2 class="text-lg font-semibold mb-4">Manual Rule Builder</h2>
+          <div id="rule-conditions" class="space-y-4"></div>
+          <button id="addConditionBtn" class="text-xs px-2 py-1 rounded border border-blue-300 text-blue-700 hover:bg-blue-50 mt-2">+ Add Condition</button>
+    
+          <!-- Typology Fields -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+            <input type="number" id="structuring-count" class="p-2 border rounded" placeholder="Min Transactions">
+            <input type="number" id="structuring-max-amount" class="p-2 border rounded" placeholder="Max Individual Amount">
+            <input type="number" id="structuring-total-threshold" class="p-2 border rounded" placeholder="Total Threshold">
+            <input type="number" id="fanin-senders" class="p-2 border rounded" placeholder="Min Unique Senders">
+            <input type="number" id="fanout-receivers" class="p-2 border rounded" placeholder="Min Unique Recipients">
+          </div>
+    
+          <div class="mt-4">
+            <label class="block font-semibold mb-1">Then:</label>
+            <select id="ruleOutput" class="p-2 border rounded">
+              <option value="1">Money Laundering (1)</option>
+              <option value="0">Legitimate (0)</option>
+            </select>
+          </div>
+    
+          <button id="generateAdvancedCode" class="px-4 py-2 bg-blue-600 text-white rounded mt-4">🚀 Generate Label Function</button>
+        </div>
+    
+        <!-- Rule Preview -->
+        <div class="bg-white p-6 rounded-xl shadow">
+          <h3 class="text-md font-semibold mb-2">🧠 Rule Preview</h3>
+          <textarea id="generatedAdvancedCode" class="w-full p-2 border rounded h-48"></textarea>
+          <button id="addToLibraryBtn" class="mt-2 px-4 py-2 border border-blue-300 text-blue-700 rounded hover:bg-blue-50">💾 Save Rule</button>
+        </div>
+    
+      <!-- Evaluation Metrics -->
+      <div class="bg-white p-6 rounded-xl shadow ">
+        <h3 class="font-semibold mb-4">📊 Evaluation Metrics</h3>
+        <div class="grid grid-cols-5 gap-4 text-center">
+          <div>
+            <div class="text-xl font-bold">
+              <span id="accuracy">{% if evaluation %}{{ evaluation.accuracy }}{% else %}--{% endif %}</span>
+            </div>
+            <div class="text-xs uppercase text-gray-500">Accuracy</div>
+          </div>
+          <div>
+            <div class="text-xl font-bold">
+              <span id="precision">{% if evaluation %}{{ evaluation.precision }}{% else %}--{% endif %}</span>
+            </div>
+            <div class="text-xs uppercase text-gray-500">Precision</div>
+          </div>
+          <div>
+            <div class="text-xl font-bold">
+              <span id="recall">{% if evaluation %}{{ evaluation.recall }}{% else %}--{% endif %}</span>
+            </div>
+            <div class="text-xs uppercase text-gray-500">Recall</div>
+          </div>
+          <div>
+            <div class="text-xl font-bold">
+              <span id="f1">{% if evaluation %}{{ evaluation.f1 }}{% else %}--{% endif %}</span>
+            </div>
+            <div class="text-xs uppercase text-gray-500">F1 Score</div>
+          </div>
+          <div>
+            <div class="text-xl font-bold">
+              <span id="coverage">{% if evaluation %}{{ evaluation.coverage }}{% else %}--{% endif %}</span>
+            </div>
+            <div class="text-xs uppercase text-gray-500">Coverage</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    
+      <!-- RIGHT COLUMN: Sensitivity & Glossary Tabs -->
+        </div><div class="lg:col-span-4 space-y-6">
+          <div class="bg-white p-6 rounded-xl shadow">
+          <div class="border-b flex gap-6 mb-4">
+          <button class="tab-button font-semibold text-sm py-2 border-b-2 border-blue-600" data-tab="sensitivity">Sensitivity</button>
+          <button class="tab-button font-semibold text-sm py-2 text-gray-600" data-tab="glossary">Task 2 Info</button>
+          </div>
+      
+          <!-- Sensitivity Tab -->
+          <div id="tab-sensitivity" class="tab-content">
+            <div class="flex flex-col gap-2">
+              <label>Hour of the Day:</label>
+              <select id="hour" class="w-full p-2 border rounded">
+                <option value="">(Any time)</option>
+                {% for h in range(24) %}
+                <option value="{{ h }}">{{ "%02d:00"|format(h) }}</option>
+                {% endfor %}
+              </select>
+              
+      
+              <label>Day of the Week:</label>
+              <select id="dayOfWeek" class="w-full p-2 border rounded">
+                <option value="">(Any day)</option>
+                <option value="0">Monday</option>
+                <option value="1">Tuesday</option>
+                <option value="2">Wednesday</option>
+                <option value="3">Thursday</option>
+                <option value="4">Friday</option>
+                <option value="5">Saturday</option>
+                <option value="6">Sunday</option>
+              </select>
+              
+      
+              <label>Amount Paid Range:</label>
+              <div class="flex items-center gap-4">
+                <input type="range" id="amountPaidMinSlider" class="w-full" min="1000" max="1000000000" step="500" value="10000">
+                <input type="range" id="amountPaidMaxSlider" class="w-full" min="1000" max="1000000000" step="500" value="20000">
+              </div>
+              <span class="text-sm font-medium mt-1 mb-3" id="amountPaidRangeValue">10000 - 20000</span>
+      
+              <label>Amount Received Range:</label>
+              <div class="flex items-center gap-4">
+                <input type="range" id="amountReceivedMinSlider" class="w-full" min="1000" max="1000000000" step="500" value="10000">
+                <input type="range" id="amountReceivedMaxSlider" class="w-full" min="1000" max="1000000000" step="500" value="20000">
+              </div>
+              <span class="text-sm font-medium mt-1 mb-3" id="amountReceivedRangeValue">10000 - 20000</span>
+      
+              <label for="payment-format">Payment Format:</label>
+              <select id="payment-format" class="w-full p-2 border rounded"></select>
+      
+              <label for="payment-currency">Payment Currency:</label>
+              <select id="payment-currency" class="w-full p-2 border rounded"></select>
+      
+              <label for="receiving-currency">Receiving Currency:</label>
+              <select id="receiving-currency" class="w-full p-2 border rounded"></select>
+      
+              <button id="run-analysis" class="w-full bg-blue-600 text-white py-2 rounded">Run Analysis</button>
+              <div id="sensitivity-analysis" class="mt-4"></div>
+            </div>
+          </div>
+      
+          <!-- Glossary Tab -->
+          <div id="tab-glossary" class="tab-content hidden">
+            <div class="text-sm text-gray-700 space-y-4 max-h-[450px] overflow-y-auto">
+              <div class="bg-blue-50 border border-blue-200 p-3 rounded">
+                <h4 class="font-semibold text-blue-700">AML Typology Glossary</h4>
+                <p class="text-sm text-blue-600 mt-1">Common patterns and behaviors that may indicate money laundering activities.</p>
+              </div>
+      
+              <div class="border p-4 rounded">
+                <h5 class="font-bold">🧩 Structuring Transactions (Smurfing)</h5>
+                <p class="mt-2 font-semibold">What to Detect:</p>
+                <p>An account receives many small transactions (each under $10,000) that together add up to a big amount.</p>
+                <p class="mt-2 font-semibold">How to Spot It:</p>
+                <ul class="list-disc pl-5 text-sm space-y-1">
+                  <li>3 or more small deposits</li>
+                  <li>Each deposit under $10,000</li>
+                  <li>Total over $10,000</li>
+                </ul>
+                <p class="mt-2 text-yellow-800 bg-yellow-50 border border-yellow-200 px-3 py-2 rounded text-sm italic">
+                  "If an account receives 3 or more small deposits, each under $10,000, and the total exceeds $10,000, flag the transaction"
+                </p>
+              </div>
+      
+              <div class="border p-4 rounded">
+                <h5 class="font-bold">🧲 Fan-In Pattern (Collecting Money)</h5>
+                <p class="mt-2 font-semibold">What to Detect:</p>
+                <p>An account receives money from many different sources.</p>
+                <p class="mt-2 font-semibold">How to Spot It:</p>
+                <ul class="list-disc pl-5 text-sm space-y-1">
+                  <li>Account receives from 3+ different sending accounts</li>
+                </ul>
+                <p class="mt-2 text-yellow-800 bg-yellow-50 border border-yellow-200 px-3 py-2 rounded text-sm italic">
+                  "If an account receives money from 3 or more different accounts, flag the transaction as suspicious."
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+    
+      <!-- Feature Importance + Comparison -->
+      <div class="lg:col-span-12 mt-6">
+        <div class="bg-white p-6 rounded-xl shadow ">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="font-semibold text-lg">📈 Feature Importance + Comparison</h3>
+            <div class="space-x-2">
+              <button id="expand-all" class="text-xs px-2 py-1 rounded border border-blue-300 text-blue-700 hover:bg-blue-50">Expand All</button>
+              <button id="collapse-all" class="text-xs px-2 py-1 rounded border border-blue-300 text-blue-700 hover:bg-blue-50">Collapse All</button>
+            </div>
+          </div>
+
+          <!-- Feature Cards -->
+          <div id="feature-comparison" class="space-y-6">
+            {% for feature in feature_graphs %}
+            <div class="feature-block border rounded-xl p-4 bg-white shadow-sm cursor-pointer transition-all duration-200" data-feature="{{ feature.feature }}">
+              <!-- Header (Clickable) -->
+              <div class="flex items-center justify-between mb-2 toggle-header">
+                <div>
+                  <div class="text-sm font-semibold text-slate-800">{{ feature.feature }}</div>
+                  <div class="text-xs text-slate-500">
+                    <span class="font-semibold text-lg text-blue-600">{{ feature.importance }}%</span> importance
+                  </div>
+                </div>
+                <!-- Arrow Icon -->
+                <svg class="arrow-icon w-4 h-4 text-gray-500 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+
+              <!-- Collapsible Content -->
+              <div class="collapsible-content space-y-3 hidden">
+                <div class="flex justify-between gap-6 px-2">
+                  <div class="w-1/2 text-sm font-semibold text-gray-600 text-center">Before</div>
+                  <div class="w-1/2 text-sm font-semibold text-gray-600 text-center">After</div>
+                </div>
+
+                {% for i in range(feature.labels | length) %}
+                <div class="flex justify-between gap-6">
+                  <!-- Before -->
+                  <div class="w-1/2">
+                    <div class="text-sm font-medium text-slate-700">{{ feature.labels[i] }}</div>
+                    <div class="flex justify-between text-xs text-slate-500 mb-1">
+                      <span>{{ feature.legit[i] + feature.laundering[i] }} txns</span>
+                      <span>
+                        {{ (100 * feature.legit[i] / (feature.legit[i] + feature.laundering[i] + 1e-5)) | round(1) }}% Legit |
+                        {{ (100 * feature.laundering[i] / (feature.legit[i] + feature.laundering[i] + 1e-5)) | round(1) }}% Laundering
+                      </span>
+                    </div>
+                    <div class="flex h-2 bg-slate-200 rounded overflow-hidden">
+                      <div class="bg-blue-500" style="width: {{ 100 * feature.legit[i] / (feature.legit[i] + feature.laundering[i] + 1e-5) }}%"></div>
+                      <div class="bg-red-500" style="width: {{ 100 * feature.laundering[i] / (feature.legit[i] + feature.laundering[i] + 1e-5) }}%"></div>
+                    </div>
+                  </div>
+
+                  <!-- After -->
+                  <div class="w-1/2">
+                    <div class="text-sm font-medium text-slate-700">{{ feature.after.labels[i] }}</div>
+                    <div class="flex justify-between text-xs text-slate-500 mb-1">
+                      <span>{{ feature.after.legit[i] + feature.after.laundering[i] }} txns</span>
+                      <span>
+                        {% set legit_delta = 100 * (feature.after.legit[i] - feature.legit[i]) / (feature.legit[i] + 1e-5) %}
+                        {% set laundering_delta = 100 * (feature.after.laundering[i] - feature.laundering[i]) / (feature.laundering[i] + 1e-5) %}
+                        {% if legit_delta >= 0 %}
+                          +{{ legit_delta | round(1) }}% Legit
+                        {% else %}
+                          {{ legit_delta | round(1) }}% Legit
+                        {% endif %}
+                        |
+                        {% if laundering_delta >= 0 %}
+                          +{{ laundering_delta | round(1) }}% Laundering
+                        {% else %}
+                          {{ laundering_delta | round(1) }}% Laundering
+                        {% endif %}
+                      </span>
+                    </div>
+                    <div class="flex h-2 bg-slate-200 rounded overflow-hidden">
+                      <div class="bg-blue-300" style="width: {{ 100 * feature.after.legit[i] / (feature.after.legit[i] + feature.after.laundering[i] + 1e-5) }}%"></div>
+                      <div class="bg-red-300" style="width: {{ 100 * feature.after.laundering[i] / (feature.after.legit[i] + feature.after.laundering[i] + 1e-5) }}%"></div>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+        </div>
+      </div>
+
+    </div>
+  </main>
+    
+  <script>
+    //Front end
+
+    function copyCode() {
+      const code = document.getElementById("code-block");
+      if (!code) return;
+      navigator.clipboard.writeText(code.innerText).then(() => {
+        alert("✅ Code copied!");
+      });
+    }
+  
+    function clearForm(e) {
+      e.preventDefault();
+      document.querySelector('input[name="name"]').value = "";
+      document.querySelector('textarea[name="nl_label"]').value = "";
+    }
+  
+      //----------------------------------------Added from index page------------------------------------------------------------
+
+document.getElementById('expand-all').addEventListener('click', () => {
+    const allContent = document.querySelectorAll('.collapsible-content');
+    allContent.forEach(content => {
+        content.classList.remove('hidden');
+    });
+});
+
+document.getElementById('collapse-all').addEventListener('click', () => {
+    const allContent = document.querySelectorAll('.collapsible-content');
+    allContent.forEach(content => {
+        content.classList.add('hidden');
+    });
+});
+
+
+      // Fetch the latest evaluation metrics (if needed) and update dynamically
+function fetchEvaluationMetrics() {
+    fetch('/get-evaluation')  // Replace with your actual route if different
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('accuracy').innerText = data.accuracy;
+            document.getElementById('precision').innerText = data.precision;
+            document.getElementById('recall').innerText = data.recall;
+            document.getElementById('f1').innerText = data.f1;
+            document.getElementById('coverage').innerText = data.coverage;
+        })
+        .catch(error => console.error('Error fetching evaluation metrics:', error));
+}
+
+// Call this function to periodically update or refresh the metrics if required
+fetchEvaluationMetrics();
+
+
+        // Format number for sliders
+        function formatNumber(value) {
+      if (value >= 1_000_000_000) {
+        return (value / 1_000_000_000).toFixed(1) + "B"; 
+      } else if (value >= 1_000_000) {
+        return (value / 1_000_000).toFixed(1) + "M"; 
+      } else if (value >= 1_000) {
+        return (value / 1_000).toFixed(1) + "k"; 
+      }
+      return value;
+    }
+  
+    // Handle Amount Paid Range Sliders
+    const amountPaidMinSlider = document.getElementById("amountPaidMinSlider");
+    const amountPaidMaxSlider = document.getElementById("amountPaidMaxSlider");
+    const amountPaidRangeValue = document.getElementById("amountPaidRangeValue");
+  
+    amountPaidMinSlider.addEventListener("input", () => {
+      const minValue = amountPaidMinSlider.value;
+      const maxValue = amountPaidMaxSlider.value;
+      amountPaidRangeValue.textContent = `${formatNumber(minValue)} - ${formatNumber(maxValue)}`;
+    });
+  
+    amountPaidMaxSlider.addEventListener("input", () => {
+      const minValue = amountPaidMinSlider.value;
+      const maxValue = amountPaidMaxSlider.value;
+      amountPaidRangeValue.textContent = `${formatNumber(minValue)} - ${formatNumber(maxValue)}`;
+    });
+  
+    // Handle Amount Received Range Sliders
+    const amountReceivedMinSlider = document.getElementById("amountReceivedMinSlider");
+    const amountReceivedMaxSlider = document.getElementById("amountReceivedMaxSlider");
+    const amountReceivedRangeValue = document.getElementById("amountReceivedRangeValue");
+  
+    amountReceivedMinSlider.addEventListener("input", () => {
+      const minValue = amountReceivedMinSlider.value;
+      const maxValue = amountReceivedMaxSlider.value;
+      amountReceivedRangeValue.textContent = `${formatNumber(minValue)} - ${formatNumber(maxValue)}`;
+    });
+  
+    amountReceivedMaxSlider.addEventListener("input", () => {
+      const minValue = amountReceivedMinSlider.value;
+      const maxValue = amountReceivedMaxSlider.value;
+      amountReceivedRangeValue.textContent = `${formatNumber(minValue)} - ${formatNumber(maxValue)}`;
+    });
+  
+    // Run Analysis Button Logic
+    document.getElementById("run-analysis").addEventListener("click", async () => {
+      const getSafe = (id, fallback = "Unknown") => {
+        const el = document.getElementById(id);
+        return el && el.value !== undefined ? el.value : fallback;
+      };
+
+      const payload = {
+        "Amount Paid Min": parseFloat(getSafe("amountPaidMinSlider", "0")),
+        "Amount Paid Max": parseFloat(getSafe("amountPaidMaxSlider", "1000000000")),
+        "Amount Received Min": parseFloat(getSafe("amountReceivedMinSlider", "0")),
+        "Amount Received Max": parseFloat(getSafe("amountReceivedMaxSlider", "1000000000")),
+        "Payment Format": getSafe("payment-format"),
+        "Payment Currency": getSafe("payment-currency"),
+        "Receiving Currency": getSafe("receiving-currency"),
+        "Hour": parseInt(getSafe("hour", "0")),
+        "DayOfWeek": parseInt(getSafe("dayOfWeek", "0"))
+      };
+
+      try {
+        const res = await fetch("/sensitivity-analysis", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+  
+        const data = await res.json();
+        if (data.error) throw new Error(data.error);
+  
+        const diff = (data.perturbed - data.original) * 100;
+        const direction = diff >= 0 ? "+" : "";
+        const color = diff >= 0 ? "text-green-600" : "text-red-600";
+  
+        document.getElementById("sensitivity-analysis").innerHTML = `
+          <div class="bg-blue-50 text-center p-4 rounded-xl">
+            <div class="text-sm font-medium text-blue-700 mb-1">Money Laundering Probability</div>
+            <div class="text-3xl font-bold text-blue-700">${(data.perturbed * 100).toFixed(1)}%</div>
+            <div class="text-sm font-medium ${color}">${direction}${diff.toFixed(1)}% from baseline</div>
+          </div>
+        `;
+      } catch (err) {
+        console.error("Sensitivity failed:", err);
+        document.getElementById("sensitivity-analysis").innerHTML =
+          `<p class="text-red-600 font-medium">Error: ${err.message}</p>`;
+      }
+    });
+
+    // Dropdown currency
+
+document.addEventListener("DOMContentLoaded", function () {
+  // Populate Payment and Receiving Currency
+  fetch("/eda/available-currencies")
+    .then(res => res.json())
+    .then(data => {
+      const paymentDropdown = document.getElementById("payment-currency");
+      const receivingDropdown = document.getElementById("receiving-currency");
+
+      data.forEach(currency => {
+        const option1 = document.createElement("option");
+        option1.value = currency;
+        option1.textContent = currency;
+
+        const option2 = option1.cloneNode(true);
+
+        paymentDropdown.appendChild(option1);
+        receivingDropdown.appendChild(option2);
+      });
+    });
+
+  // Populate Payment Format
+  fetch("/eda/payment-formats")
+    .then(res => res.json())
+    .then(data => {
+      const formatDropdown = document.getElementById("payment-format");
+      data.forEach(format => {
+        const option = document.createElement("option");
+        option.value = format;
+        option.textContent = format;
+        formatDropdown.appendChild(option);
+      });
+    });
+});
+
+
+    // Tab Switching Logic
+    document.querySelectorAll(".tab-button").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".tab-button").forEach(b => {
+          b.classList.remove("border-blue-600", "text-blue-600");
+        });
+  
+        document.querySelectorAll(".tab-content").forEach(c => {
+          c.classList.add("hidden");
+        });
+  
+        btn.classList.add("border-blue-600", "text-blue-600");
+        const tabContentId = `tab-${btn.dataset.tab}`;
+        const tabContent = document.getElementById(tabContentId);
+        if (tabContent) {
+          tabContent.classList.remove("hidden");
+        }
+      });
+    });
+  
+      // // Modal click outside to close
+      // modal?.addEventListener("click", e => {
+      //   if (e.target.id === "aiRuleModal") {
+      //     modal.classList.add("hidden");
+      //   }
+      // });
+
+   // Load graph
+
+// Function to dynamically update the feature comparison table
+function updateFeatureComparison(features) {
+  const container = document.getElementById('feature-comparison');
+  container.innerHTML = "";
+
+  features.forEach(feature => {
+    const block = document.createElement('div');
+    block.classList.add('feature-block', 'border', 'rounded-xl', 'p-4', 'bg-white', 'shadow-sm');
+    block.setAttribute('data-feature', feature.name);
+
+    const header = `
+      <div class="flex items-start justify-between mb-4">
+        <div class="flex items-center gap-3">
+          <input type="checkbox" class="feature-checkbox h-4 w-4 text-blue-600 border-gray-300" />
+          <div>
+            <div class="text-sm font-semibold text-slate-800">${feature.feature}</div>
+            <div class="text-xs text-slate-500">
+              <span class="font-semibold text-lg text-blue-600">${feature.importance}%</span> importance
+            </div>
+          </div>
+        </div>
+        <div class="text-xs font-medium text-red-600">
+          <span>${feature.delta_legit}% Legit Δ</span>
+          <span>${feature.delta_laundering}% Laundering Δ</span>
+        </div>
+      </div>
+    `;
+
+    block.innerHTML = header;
+
+    const collapsible = document.createElement('div');
+    collapsible.classList.add('collapsible-content', 'space-y-3');
+
+    feature.labels.forEach((label, i) => {
+      const beforeTotal = feature.legit[i] + feature.laundering[i];
+      const afterTotal = feature.after.legit[i] + feature.after.laundering[i];
+
+      const legitDelta = feature.legit[i] === 0 ? 0 : ((feature.after.legit[i] - feature.legit[i]) / (feature.legit[i] + 1e-5)) * 100;
+      const launderingDelta = feature.laundering[i] === 0 ? 0 : ((feature.after.laundering[i] - feature.laundering[i]) / (feature.laundering[i] + 1e-5)) * 100;
+
+      const row = document.createElement('div');
+      row.classList.add('flex', 'justify-between', 'gap-6');
+
+      row.innerHTML = `
+        <div class="w-1/2">
+          <div class="text-sm font-medium text-slate-700">${label} (Before)</div>
+          <div class="flex justify-between text-xs text-slate-500 mb-1">
+            <span>${beforeTotal} txns</span>
+            <span>${legitDelta.toFixed(1)}% Legit | ${launderingDelta.toFixed(1)}% Laundering</span>
+          </div>
+          <div class="flex h-2 bg-slate-200 rounded overflow-hidden">
+            <div class="bg-blue-500" style="width: ${100 * feature.legit[i] / (beforeTotal + 1e-5)}%"></div>
+            <div class="bg-red-500" style="width: ${100 * feature.laundering[i] / (beforeTotal + 1e-5)}%"></div>
+          </div>
+        </div>
+
+        <div class="w-1/2">
+          <div class="text-sm font-medium text-slate-700">${feature.after.labels[i]} (After)</div>
+          <div class="flex justify-between text-xs text-slate-500 mb-1">
+            <span>${afterTotal} txns</span>
+          </div>
+          <div class="flex h-2 bg-slate-200 rounded overflow-hidden">
+            <div class="bg-blue-300" style="width: ${100 * feature.after.legit[i] / (afterTotal + 1e-5)}%"></div>
+            <div class="bg-red-300" style="width: ${100 * feature.after.laundering[i] / (afterTotal + 1e-5)}%"></div>
+          </div>
+        </div>
+      `;
+
+      collapsible.appendChild(row);
+    });
+
+    block.appendChild(collapsible);
+    container.appendChild(block);
+  });
+}
+
+      //----------------------------------------Rule builder------------------------------------------------------------
+
+
+// ---------- Manual Rule Builder Setup ----------
+
+// --- Global state ---
+let specialDropdownOptions = {};
+let availableColumns = [];
+
+// --- Load Columns and Dropdown Values ---
+const EXCLUDED_COLUMNS = ["_bin", "Human Label", "Match Type", "Is Laundering"];
+
+async function preloadDropdownValues() {
+  try {
+    const res = await fetch("/get-columns");
+    let columns = await res.json();
+    console.log("📊 Columns received from backend:", columns);
+
+    // Filter out excluded columns
+    columns = columns.filter(col => !EXCLUDED_COLUMNS.includes(col));
+
+    specialDropdownOptions = {};
+    availableColumns = columns;
+
+    for (const col of columns) {
+      try {
+        const r = await fetch(`/distinct/${encodeURIComponent(col)}`);
+        specialDropdownOptions[col] = r.ok ? await r.json() : [];
+      } catch (err) {
+        console.error(`❌ Failed to fetch distinct values for ${col}:`, err);
+        specialDropdownOptions[col] = [];
+      }
+    }
+
+    document.querySelectorAll(".column-select").forEach(select => {
+      updateColumnOptions(select);
+      updateInputField(select.closest(".condition-row"));
+    });
+
+  } catch (e) {
+    console.error("❌ Failed to preload dropdown values:", e);
+  }
+}
+
+
+function updateColumnOptions(select) {
+  if (!select) return;
+
+  select.innerHTML = "";
+
+  const filteredColumns = availableColumns.filter(col => !EXCLUDED_COLUMNS.includes(col));
+  filteredColumns.forEach(col => {
+    const option = new Option(col, col);
+    select.appendChild(option);
+  });
+}
+
+
+// --- Update Input Field Based on Column Type ---
+function updateInputField(row) {
+  const column = row.querySelector(".column-select")?.value;
+  const container = row.querySelector(".value-input");
+
+  if (!column || !container) return;
+
+  container.innerHTML = ""; // Clear previous content
+
+  const isNumeric = ["Amount Paid", "Amount Received"].includes(column);
+  if (isNumeric) {
+    const input = document.createElement("input");
+    input.type = "number";
+    input.className = "w-full p-2 border border-gray-300 rounded";
+    container.appendChild(input);
+  } else {
+    const select = document.createElement("select");
+    select.className = "w-full p-2 border border-gray-300 rounded";
+
+    const values = specialDropdownOptions[column] || [];
+    values.forEach(val => {
+      const opt = document.createElement("option");
+      opt.value = val;
+      opt.textContent = val;
+      select.appendChild(opt);
+    });
+
+    container.appendChild(select);
+  }
+}
+
+async function fetchColumns() {
+  const res = await fetch("/get-columns");
+  availableColumns = await res.json();
+}
+
+// --- Add New Condition Row ---
+function addConditionRow() {
+  const container = document.getElementById("rule-conditions");
+  if (!container) {
+    console.error("❌ Missing #rule-conditions container");
+    return;
+  }
+
+  const row = document.createElement("div");
+  row.className = "condition-row flex gap-2 mb-2 items-center";
+
+  // Column select
+  const columnSelect = document.createElement("select");
+  columnSelect.className = "column-select w-1/3 p-2 border border-gray-300 rounded";
+  columnSelect.innerHTML = availableColumns.map(col =>
+    `<option value="${col}">${col}</option>`
+  ).join("");
+
+  // Operator select
+  const operatorSelect = document.createElement("select");
+  operatorSelect.className = "operator-select w-1/4 p-2 border border-gray-300 rounded";
+  ["==", "!=", "<", "<=", ">", ">="].forEach(op => {
+    const opt = document.createElement("option");
+    opt.value = op;
+    opt.textContent = op;
+    operatorSelect.appendChild(opt);
+  });
+
+  // Value input (will be updated by updateInputField)
+  const valueInput = document.createElement("div");
+  valueInput.className = "value-input w-1/3";
+
+  // Remove button
+  const removeBtn = document.createElement("button");
+  removeBtn.textContent = "✕";
+  removeBtn.className = "text-red-600 text-sm hover:text-red-800";
+  removeBtn.addEventListener("click", () => row.remove());
+
+  // Assemble row
+  row.appendChild(columnSelect);
+  row.appendChild(operatorSelect);
+  row.appendChild(valueInput);
+  row.appendChild(removeBtn);
+  container.appendChild(row);
+
+  // Update input field based on selected column
+  updateInputField(row);
+
+  // Rebind column select change event
+  columnSelect.addEventListener("change", () => {
+    updateInputField(row);
+  });
+}
+
+// --- Sensitivity Analysis Dropdown Fill ---
+function populateSensitivityForm(columns) {
+  const container = document.getElementById("sensitivity-form");
+  if (!container) return;
+
+  container.innerHTML = "";
+  columns.forEach(col => {
+    const wrapper = document.createElement("div");
+    wrapper.className = "mb-2";
+    const label = document.createElement("label");
+    label.textContent = col;
+    label.className = "block text-sm font-medium text-gray-700 mb-1";
+
+    const input = document.createElement("input");
+    input.name = col;
+    input.className = "form-control w-full p-1 border rounded text-sm";
+    input.placeholder = "Override (optional)";
+
+    wrapper.appendChild(label);
+    wrapper.appendChild(input);
+    container.appendChild(wrapper);
+  });
+}
+
+// --- Collect Conditions ---
+function collectConditionData() {
+  const parseOrNull = (val, parser) => {
+    const parsed = parser(val);
+    return isNaN(parsed) ? null : parsed;
+  };
+
+  const conditions = [];
+  document.querySelectorAll(".condition-row").forEach(row => {
+    const field = row.querySelector(".column-select")?.value?.trim();
+    const operator = row.querySelector(".operator-select")?.value?.trim();
+    const valueInput = row.querySelector(".value-input input, .value-input select");
+    const value = valueInput?.value?.trim();
+
+    if (field && operator && value !== "") {
+      conditions.push({ field, operator, value });
+    }
+  });
+
+  const payload = {
+    conditions,
+    label: parseInt(document.getElementById("ruleOutput")?.value || "1", 10),
+    min_transactions: parseOrNull(document.getElementById("structuring-count")?.value, parseInt),
+    max_individual_amount: parseOrNull(document.getElementById("structuring-max-amount")?.value, parseFloat),
+    total_threshold: parseOrNull(document.getElementById("structuring-total-threshold")?.value, parseFloat),
+    min_unique_senders: parseOrNull(document.getElementById("fanin-senders")?.value, parseInt),
+    min_unique_recipients: parseOrNull(document.getElementById("fanout-receivers")?.value, parseInt)
+  };
+
+  const hasTypology = Object.values(payload).some(val => typeof val === "number");
+  if (conditions.length === 0 && !hasTypology) {
+    alert("Please specify at least one rule condition or typology input.");
+    return null;
+  }
+
+  return payload;
+}
+
+  // Add to library
+document.getElementById("addToLibraryBtn").addEventListener("click", async () => {
+  const textarea = document.getElementById("generatedAdvancedCode");
+  if (!textarea) {
+    alert("🚫 Cannot find code output field.");
+    return;
+  }
+
+  const code = textarea.value.trim();
+  if (!code || !code.includes("def label_function")) {
+    alert("🚫 Please generate a valid label function first.");
+    return;
+  }
+
+  try {
+    const formData = new URLSearchParams();
+    formData.append("label_function", code);
+    formData.append("name", "Manual Rule");
+
+    const res = await fetch("/add-to-library", {
+      method: "POST",
+      body: formData
+    });
+
+    if (!res.ok) {
+      const errorText = await res.text();
+      console.error("❌ Server error:", errorText);
+      alert("❌ Failed to save rule. Check console.");
+      return;
+    }
+
+    alert("✅ Rule saved to library!");
+    location.href = "/library";
+
+  } catch (err) {
+    console.error("❌ Error saving rule:", err);
+    alert("❌ Network error. Try again.");
+  }
+});
+
+  document.querySelectorAll('.feature-block').forEach(card => {
+    card.querySelector('.toggle-header').addEventListener('click', () => {
+      const content = card.querySelector('.collapsible-content');
+      const arrow = card.querySelector('.arrow-icon');
+      content.classList.toggle('hidden');
+      arrow.classList.toggle('rotate-180');
+    });
+  });
+
+  document.getElementById('expand-all')?.addEventListener('click', () => {
+    document.querySelectorAll('.collapsible-content').forEach(e => e.classList.remove('hidden'));
+    document.querySelectorAll('.arrow-icon').forEach(e => e.classList.add('rotate-180'));
+  });
+
+  document.getElementById('collapse-all')?.addEventListener('click', () => {
+    document.querySelectorAll('.collapsible-content').forEach(e => e.classList.add('hidden'));
+    document.querySelectorAll('.arrow-icon').forEach(e => e.classList.remove('rotate-180'));
+  });
+
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const COLUMN_METADATA = {
+  "HourOfDay": {
+    type: "dropdown",
+    values: ["(None)", "(All)", "00:00", "01:00", "02:00", "03:00", "04:00", "05:00", "06:00",
+             "07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00",
+             "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00"]
+  },
+  "DayOfWeek": {
+    type: "dropdown",
+    values: ["(None)", "(All)", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+  },
+  "From Bank": { type: "number" },
+  "Account": { type: "string" },
+  "To Bank": { type: "number" },
+  "Account.1": { type: "string" },
+  "Amount Received": { type: "number" },
+  "Receiving Currency": {
+    type: "dropdown",
+    values: ["(None)", "(All)", "Rupee", "Euro", "Australian Dollar", "US Dollar", "UK Pound", "Shekel", "Ruble", "Saudi Riyal", "Swiss Franc", "Canadian Dollar"]
+  },
+  "Amount Paid": { type: "number" },
+  "Payment Currency": {
+    type: "dropdown",
+    values: ["(None)", "(All)", "Rupee", "Euro", "Australian Dollar", "US Dollar", "UK Pound", "Shekel", "Ruble", "Saudi Riyal", "Swiss Franc", "Canadian Dollar"]
+  },
+  "Payment Format": {
+    type: "dropdown",
+    values: ["(None)", "(All)", "Cheque", "ACH", "Credit Card", "Reinvestment", "Cash", "Wire", "Bitcoin"]
+  }
+};
+
+
+  // --- Add Condition Button ---
+  document.getElementById("addConditionBtn")?.addEventListener("click", () => {
+    const container = document.getElementById("rule-conditions");
+
+    const row = document.createElement("div");
+    row.classList.add("condition-row", "flex", "gap-2", "items-center");
+
+    const fieldSelect = document.createElement("select");
+    fieldSelect.classList.add("p-2", "border", "rounded", "column-select");
+    for (const col of Object.keys(COLUMN_METADATA)) {
+      const opt = document.createElement("option");
+      opt.value = col;
+      opt.textContent = col;
+      fieldSelect.appendChild(opt);
+    }
+
+    const operatorSelect = document.createElement("select");
+    operatorSelect.classList.add("p-2", "border", "rounded", "operator-select");
+    ["is", "is not", "greater than", "less than", "between"].forEach(op => {
+      const opt = document.createElement("option");
+      opt.value = op;
+      opt.textContent = op;
+      operatorSelect.appendChild(opt);
+    });
+
+    const valueContainer = document.createElement("div");
+    valueContainer.classList.add("value-input");
+
+    const removeBtn = document.createElement("button");
+    removeBtn.innerText = "🗑️";
+    removeBtn.classList.add("text-sm", "px-2", "py-1", "text-red-600");
+    removeBtn.addEventListener("click", () => container.removeChild(row));
+
+    function updateValueInput() {
+      valueContainer.innerHTML = "";
+      const field = fieldSelect.value;
+      const op = operatorSelect.value;
+      const meta = COLUMN_METADATA[field];
+
+      const createInput = (type = "text", placeholder = "Value") => {
+        const input = document.createElement("input");
+        input.type = type;
+        input.placeholder = placeholder;
+        input.classList.add("p-2", "border", "rounded");
+        return input;
+      };
+
+      if (op === "between" && meta.type === "number") {
+        const from = createInput("number", "Min");
+        const to = createInput("number", "Max");
+        from.classList.add("range-min");
+        to.classList.add("range-max");
+        valueContainer.appendChild(from);
+        valueContainer.appendChild(to);
+      } else if (meta.type === "dropdown") {
+        const select = document.createElement("select");
+        select.classList.add("p-2", "border", "rounded");
+        meta.values.forEach(v => {
+          const opt = document.createElement("option");
+          opt.value = v;
+          opt.textContent = v;
+          select.appendChild(opt);
+        });
+        valueContainer.appendChild(select);
+      } else {
+        valueContainer.appendChild(createInput(meta.type === "number" ? "number" : "text"));
+      }
+    }
+
+    fieldSelect.addEventListener("change", updateValueInput);
+    operatorSelect.addEventListener("change", updateValueInput);
+    updateValueInput(); // trigger on add
+
+    row.appendChild(fieldSelect);
+    row.appendChild(operatorSelect);
+    row.appendChild(valueContainer);
+    row.appendChild(removeBtn);
+    container.appendChild(row);
+  });
+
+  // --- Generate Rule Code + Sync Backend ---
+  document.getElementById("generateAdvancedCode").addEventListener("click", async () => {
+  try {
+    const payload = collectConditionData();
+    if (!payload) return;
+
+    // Confirm payload contains all values before sending
+    console.log("🚀 Sending payload:", payload);
+
+    const res = await fetch("/generate-rule-code", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await res.json();
+    const ruleCode = data.code;
+
+    // Display rule in preview textarea
+    document.getElementById("generatedAdvancedCode").value = ruleCode;
+
+    if (!ruleCode || ruleCode.includes("return -1")) {
+      throw new Error("Rule is empty or invalid.");
+    }
+
+    // Apply the rule
+    await fetch("/apply-rule", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({
+        label_function: ruleCode,
+        name: "Manual Rule"
+      })
+    });
+
+    // Refresh metrics
+    const evalRes = await fetch("/get-evaluation");
+    const metrics = await evalRes.json();
+
+    document.getElementById("accuracy").innerText = metrics.accuracy || "N/A";
+    document.getElementById("precision").innerText = metrics.precision || "N/A";
+    document.getElementById("recall").innerText = metrics.recall || "N/A";
+    document.getElementById("f1").innerText = metrics.f1 || "N/A";
+    document.getElementById("coverage").innerText = metrics.coverage || "0.00%";
+
+    // Feature graph refresh
+    const featureRes = await fetch("/get-feature-comparison");
+    const featureData = await featureRes.json();
+    updateFeatureComparison(featureData);
+
+  } catch (err) {
+    console.error("❌ Rule generation failed:", err);
+    document.getElementById("generatedAdvancedCode").value = `# Error: ${err.message}`;
+  }
+});
+
+});
+
+</script>
+  
+  
+</body>
+</html>
