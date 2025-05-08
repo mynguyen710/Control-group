@@ -57,18 +57,7 @@
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
                         <!-- Video -->
                         <div class="lg:col-span-2 bg-white rounded-lg shadow-md overflow-hidden p-4">
-                            <iframe
-                            id="tutorial-video"
-                            width="100%"
-                            height="auto"
-                            class="aspect-video rounded"
-                            src="https://www.youtube.com/embed/os_iqsV-jkM?enablejsapi=1"
-                            title="Tutorial for user testing - group 1"
-                            frameborder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                            referrerpolicy="strict-origin-when-cross-origin"
-                            allowfullscreen>
-                          </iframe>
+                          <iframe width="966" height="521" src="https://www.youtube.com/embed/tSUpa4SfyDg" title="Tutorial for control group" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                           
                         </div>
                     
@@ -192,20 +181,38 @@
                     
                     <div class="p-4 bg-purple-50 border border-purple-100 rounded-lg">
                       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                          <h3 class="text-xl font-semibold text-purple-800 mb-4">🔧 Task 2: Use Structuring Typologies</h3>
-                          <p class="text-slate-600 mb-4">Create <strong>2 rules</strong> using <em>structuring typology fields</em> such as <strong>Fan-In</strong> or <strong>Fan-Out</strong>. These patterns help identify layered money movement across accounts.</p>
-                        </div>
-                        <div class="bg-white rounded border border-purple-200 p-4">
-                          <img src="/static/images/task%202.png" alt="Pattern detection examples" class="w-full md:w-1/2 rounded">
-                        </div>
+                          <div>
+                              <h3 class="text-xl font-semibold text-purple-800 mb-4">🔧 Task 2: Detect Transaction Patterns</h3>
+                              <div class="mb-6">
+                                  <h4 class="font-semibold text-purple-800 mb-2">Fan-In Pattern (Collecting Money)</h4>
+                                  <p class="text-slate-600">The Fan-In pattern occurs when an account receives funds from multiple different sources. This is often seen when illicit funds are collected into one account for further processing.</p>
+                                  <ul class="list-disc list-inside text-purple-700 space-y-2">
+                                      <li><strong>What to Detect:</strong> An account receives money from multiple different sources.</li>
+                                      <li><strong>How to Spot It:</strong> If an account receives money from 3 or more different sending accounts, it could indicate suspicious activity.</li>
+                                  </ul>
+                              </div>
+                              <div>
+                                  <h4 class="font-semibold text-purple-800 mb-2">Structuring Transactions (Smurfing)</h4>
+                                  <p class="text-slate-600">Smurfing refers to the practice of breaking up large transactions into smaller amounts that fall below reporting thresholds to avoid detection. This is a common money laundering tactic used by criminals to "layer" illicit funds through various financial institutions. Here's how smurfing typically works:</p>
+                                  <ul class="list-disc list-inside text-purple-700 space-y-2">
+                                      <li><strong>Multiple Small Transactions:</strong> A single person or group breaks a large sum into smaller transactions to stay below the radar of authorities or financial institutions.</li>
+                                      <li><strong>Multiple Accounts:</strong> Criminals may use many different bank accounts to deposit or transfer these smaller amounts, spreading the transactions across multiple entities.</li>
+                                      <li><strong>Avoiding Suspicious Patterns:</strong> By keeping each transaction small and dispersing the funds, the individual avoids triggering alarms that typically activate for large or unusual transactions.</li>
+                                  </ul>
+                                  <p class="text-slate-600">To detect smurfing, look for patterns where many small transactions are made from various accounts to a single target account or dispersed across many accounts. This is a common method used by money launderers to structure illegal funds in a way that appears legitimate.</p>
+                              </div>
+                          </div>
+                          <!-- Image Section with White Background wrapping around it -->
+                          <div class="bg-white rounded border border-purple-200 p-4 flex justify-center">
+                              <img src="/static/images/task 2.png" alt="Pattern detection examples" class="w-full md:w-1/2 rounded">
+                          </div>
                       </div>
-                    </div>
+                  </div>
                     
                     <div class="p-4 bg-pink-50 border border-pink-100 rounded-lg">
                       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                          <h3 class="text-xl font-semibold text-pink-800 mb-4">📊 Task 3: Use Feature Importance</h3>
+                          <h3 class="text-xl font-semibold text-pink-800 mb-4">📊 Task 3: Create rules using graph</h3>
                           <p class="text-slate-600 mb-4">Review the <strong>Feature Importance + Comparison</strong> graph to understand which features are most predictive. Based on your observations, write <strong>3 new label functions</strong> manually.</p>
                         </div>
                         <div class="bg-white rounded border border-pink-200 p-4">
@@ -227,37 +234,54 @@
                     </div>
                     
                   <!-- Performance Metrics Section -->
+                  <!-- Performance Metrics Section -->
                   <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                      <div class="p-4">
-                          <div class="space-y-4">
-                              <div class="flex items-center space-x-3">
-                                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-gauge text-blue-600">
-                                      <path d="m12 14 4-4"></path>
-                                      <path d="M3.34 19a10 10 0 1 1 17.32 0"></path>
-                                  </svg>
-                                  <h2 class="text-xl font-semibold text-slate-800">Understanding Performance</h2>
-                              </div>
-                              <p class="text-slate-600">When you create rules, you'll see these performance indicators:</p>
-                              <ul class="space-y-2 text-sm text-slate-600">
-                                  <li class="flex items-start">
-                                      <span class="inline-block w-3 h-3 bg-green-500 rounded-full mt-1 mr-2"></span>
-                                      <span><strong>Precision:</strong> How accurate your rule is when it flags suspicious transactions</span>
-                                  </li>
-                                  <li class="flex items-start">
-                                      <span class="inline-block w-3 h-3 bg-blue-500 rounded-full mt-1 mr-2"></span>
-                                      <span><strong>Recall:</strong> How many actual suspicious transactions your rule catches</span>
-                                  </li>
-                                  <li class="flex items-start">
-                                      <span class="inline-block w-3 h-3 bg-purple-500 rounded-full mt-1 mr-2"></span>
-                                      <span><strong>F1 Score:</strong> Overall effectiveness (balance of precision and recall)</span>
-                                  </li>
-                                  <li class="flex items-start">
-                                      <span class="inline-block w-3 h-3 bg-red-500 rounded-full mt-1 mr-2"></span>
-                                      <span><strong>Conflict Rate:</strong> How often rules disagree with each other</span>
-                                  </li>
-                              </ul>
+                    <div class="p-4">
+                      <div class="flex flex-col md:flex-row gap-6">
+                        <!-- Text content -->
+                        <div class="flex-1 space-y-4">
+                          <div class="flex items-center space-x-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-gauge text-blue-600">
+                              <path d="m12 14 4-4"></path>
+                              <path d="M3.34 19a10 10 0 1 1 17.32 0"></path>
+                            </svg>
+                            <h2 class="text-xl font-semibold text-slate-800">Understanding Performance</h2>
                           </div>
+                          <p class="text-slate-600">When you create rules, you'll see these performance indicators:</p>
+                          <ul class="space-y-2 text-sm text-slate-600">
+                            <li class="flex items-start">
+                              <span class="inline-block w-3 h-3 bg-green-500 rounded-full mt-1 mr-2"></span>
+                              <span><strong>Precision:</strong> How accurate your rule is when it flags suspicious transactions</span>
+                            </li>
+                            <li class="flex items-start">
+                              <span class="inline-block w-3 h-3 bg-blue-500 rounded-full mt-1 mr-2"></span>
+                              <span><strong>Recall:</strong> How many actual suspicious transactions your rule catches</span>
+                            </li>
+                            <li class="flex items-start">
+                              <span class="inline-block w-3 h-3 bg-purple-500 rounded-full mt-1 mr-2"></span>
+                              <span><strong>F1 Score:</strong> Overall effectiveness (balance of precision and recall)</span>
+                            </li>
+                            <li class="flex items-start">
+                              <span class="inline-block w-3 h-3 bg-red-500 rounded-full mt-1 mr-2"></span>
+                              <span><strong>Conflict Rate:</strong> How often rules disagree with each other</span>
+                            </li>
+                            <li class="flex items-start">
+                              <span class="inline-block w-3 h-3 bg-yellow-500 rounded-full mt-1 mr-2"></span>
+                              <span><strong>Accuracy:</strong> Out of all transactions, how many were correctly labeled</span>
+                            </li>
+                            <li class="flex items-start">
+                              <span class="inline-block w-3 h-3 bg-cyan-500 rounded-full mt-1 mr-2"></span>
+                              <span><strong>Coverage Rate:</strong> Out of all transactions, how many were labeled at all</span>
+                            </li>
+                          </ul>
+                        </div>
+
+                        <!-- Image -->
+                        <div class="flex-shrink-0 w-full md:w-1/2">
+                          <img src="metrics.png" alt="Metrics explanation infographic" class="rounded w-full h-auto">
+                        </div>
                       </div>
+                    </div>
                   </div>
 
                   
