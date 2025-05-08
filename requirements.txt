@@ -1,0 +1,14 @@
+
+Flask
+openai
+pandas
+numpy
+scikit-learn
+matplotlib
+plotly
+jinja2
+python-dotenv
+dtreeviz
+snorkel
+gunicorn
+werkzeug
