@@ -1100,7 +1100,6 @@ def library():
                            conflict_rate=conflict_rate)
 
 
-# ✅ Full /add-to-library Route (Fixed)
 # ✅ Full /add-to-library Route (Fully Fixed)
 @app.route("/add-to-library", methods=["POST"])
 def add_to_library():
@@ -1108,14 +1107,26 @@ def add_to_library():
 
     label_function_code = request.form.get('label_function')
     source = request.form.get('source', 'Human')
-    name = request.form.get('name', 'Untitled Rule')
     rule_type = request.form.get('rule_type')
 
     try:
+        # ✅ Ensure unique rule name
+        base_name = request.form.get('name', 'Manual Rule')
+        existing_names = {lf["name"] for lf in label_function_library}
+        if base_name in existing_names:
+            suffix = 1
+            new_name = f"{base_name} {suffix}"
+            while new_name in existing_names:
+                suffix += 1
+                new_name = f"{base_name} {suffix}"
+            name = new_name
+        else:
+            name = base_name
+
         # Clean and validate the code
         cleaned_code = sanitize_and_validate_python(label_function_code)
 
-        # Prepare execution environment (includes helper functions)
+        # Prepare execution environment
         exec_globals = {
             "get_outgoing_count": get_outgoing_count,
             "get_distinct_receivers": get_distinct_receivers,
@@ -1134,13 +1145,13 @@ def add_to_library():
             "NEGATIVE": 0
         }
 
-        # Compile label function
+        # Compile the label function
         exec(cleaned_code, exec_globals)
         func = exec_globals.get("label_function")
         if not func:
             raise ValueError("label_function not found")
 
-        # Signature inspection
+        # Apply the label function safely
         from inspect import signature
         sig = signature(func)
 
@@ -1155,8 +1166,8 @@ def add_to_library():
                 return ABSTAIN
 
         matched = test_df.apply(safe_apply, axis=1)
-        matched = pd.Series(matched).fillna(0).clip(0, 1).astype(int)  # ensure only 0 or 1
-        y_true = (test_df["Is Laundering"] == 1).astype(int)  # enforce binary
+        matched = pd.Series(matched).fillna(0).clip(0, 1).astype(int)
+        y_true = (test_df["Is Laundering"] == 1).astype(int)
         y_pred = matched.values
 
         precision = precision_score(y_true, y_pred, zero_division=0)
@@ -1171,6 +1182,7 @@ def add_to_library():
         except:
             chart = None
 
+        # Save the rule in the library
         label_function_library.append({
             "name": name,
             "code": cleaned_code,
@@ -1593,5 +1605,4 @@ import warnings
 warnings.filterwarnings("ignore", category=UserWarning, message="Boolean Series key will be reindexed")
 
 # if __name__ == '__main__':
-#     port = int(os.environ.get("PORT", 5000))  # Render sets this
-#     app.run(host='0.0.0.0', port=port, use_reloader=False)
+#     app.run(debug=True, host='127.0.0.1', port=5009, use_reloader=False)
