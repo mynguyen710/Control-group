@@ -1123,10 +1123,13 @@ def add_to_library():
         else:
             name = base_name
 
-        # Clean and validate the code
+        # ✅ Clean and validate the code
         cleaned_code = sanitize_and_validate_python(label_function_code)
 
-        # Prepare execution environment
+        # ✅ Use a subset of the data for memory efficiency
+        sample_df = test_df.sample(n=min(1000, len(test_df)), random_state=42)
+
+        # ✅ Prepare execution environment
         exec_globals = {
             "get_outgoing_count": get_outgoing_count,
             "get_distinct_receivers": get_distinct_receivers,
@@ -1138,37 +1141,34 @@ def add_to_library():
             "get_transactions_from": get_transactions_from,
             "get_transactions_to": get_transactions_to,
             "time_diff": time_diff,
-            "test_df": test_df,
-            "df": test_df,
+            "test_df": sample_df,
+            "df": sample_df,
             "ABSTAIN": -1,
             "POSITIVE": 1,
             "NEGATIVE": 0
         }
 
-        # Compile the label function
+        # ✅ Compile label function
         exec(cleaned_code, exec_globals)
         func = exec_globals.get("label_function")
         if not func:
             raise ValueError("label_function not found")
 
-        # Apply the label function safely
         from inspect import signature
         sig = signature(func)
 
-        def safe_apply(row):
+        # ✅ Safe apply with reduced memory pressure
+        y_pred = []
+        for _, row in sample_df.iterrows():
             try:
-                if len(sig.parameters) == 2:
-                    return func(row, test_df)
-                else:
-                    return func(row)
+                result = func(row, sample_df) if len(sig.parameters) == 2 else func(row)
+                y_pred.append(1 if result == 1 else 0)
             except Exception as e:
-                print(f"⚠️ Error applying function to row: {e}")
-                return ABSTAIN
+                print(f"⚠️ Row error: {e}")
+                y_pred.append(0)
 
-        matched = test_df.apply(safe_apply, axis=1)
-        matched = pd.Series(matched).fillna(0).clip(0, 1).astype(int)
-        y_true = (test_df["Is Laundering"] == 1).astype(int)
-        y_pred = matched.values
+        y_pred = np.array(y_pred, dtype=int)
+        y_true = (sample_df["Is Laundering"] == 1).astype(int).values
 
         precision = precision_score(y_true, y_pred, zero_division=0)
         recall = recall_score(y_true, y_pred, zero_division=0)
@@ -1182,7 +1182,6 @@ def add_to_library():
         except:
             chart = None
 
-        # Save the rule in the library
         label_function_library.append({
             "name": name,
             "code": cleaned_code,
